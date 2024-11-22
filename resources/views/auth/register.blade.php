@@ -20,18 +20,18 @@
 
         <!-- Adress -->
         <div>
-            <x-input-label for="adress" :value="__('Adress')" />
-            <x-text-input id="adress" class="block mt-1 w-full" type="text" name="adress" :value="old('adress')"
-                required autofocus autocomplete="adress" />
-            <x-input-error :messages="$errors->get('adress')" class="mt-2" />
+            <x-input-label for="address" :value="__('Adress')" />
+            <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')"
+                required autofocus autocomplete="address" />
+            <x-input-error :messages="$errors->get('address')" class="mt-2" />
         </div>
 
         <!-- Phone number -->
         <div>
-            <x-input-label for="phone-number" :value="__('Phone_number')" />
-            <x-text-input id="phone-number" class="block mt-1 w-full" type="text" name="phone_number" :value="old('phone-number')"
-                required autofocus autocomplete="phone-number" />
-            <x-input-error :messages="$errors->get('phone-number')" class="mt-2" />
+            <x-input-label for="phone_number" :value="__('Phone_number')" />
+            <x-text-input id="phone_number" class="block mt-1 w-full" type="text" name="phone_number" :value="old('phone_number')"
+                required autofocus autocomplete="phone_number" />
+            <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
         </div>
 
         <!-- Password -->
