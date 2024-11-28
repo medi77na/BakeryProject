@@ -5,9 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Order extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
+    /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
     /*
@@ -22,10 +22,8 @@ class Product extends Model
     // protected $guarded = [];
 
     protected $fillable = [
-        'name',
-        'description',
-        'price',
-        'stock'
+        'client_id',
+        'status'
     ];
 
     // protected $hidden = [
@@ -82,4 +80,5 @@ class Product extends Model
     // {
     //     $this->attributes['name'] = strtolower($value);
     // }
+
 }
