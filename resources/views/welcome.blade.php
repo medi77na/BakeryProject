@@ -172,5 +172,7 @@
                 </div>
             </div>
         </div>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+        <script src="https://code.iconify.design/3/3.0.1/iconify.min.js"></script>
     </body>
 </html>
