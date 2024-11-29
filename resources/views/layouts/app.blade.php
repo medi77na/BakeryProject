@@ -32,5 +32,6 @@
                 {{ $slot }}
             </main>
         </div>
+        <script src="https://code.iconify.design/3/3.0.1/iconify.min.js"></script>
     </body>
 </html>

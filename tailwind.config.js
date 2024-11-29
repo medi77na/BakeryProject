@@ -21,6 +21,5 @@ export default {
     plugins: [
         forms,
         require('flowbite/plugin'),
-        // addIconSelectors(['mdi', 'mdi-light']),
     ],
 };
