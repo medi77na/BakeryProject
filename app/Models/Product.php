@@ -27,6 +27,11 @@ class Product extends Model
         'price',
         'stock',
         'image_url',
+        'published',
+    ];
+    
+    protected $attributes = [
+        'published' => false,
     ];
 
     // protected $hidden = [
