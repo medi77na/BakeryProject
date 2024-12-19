@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -16,7 +16,11 @@ class ProductController extends Controller
     {
         // $products = Product::paginate(6);
         $products = Product::all();
-        return view('dashboard', compact('products'));
+
+        return view('dashboard', [
+            'products' => $products,
+            'isAdmin' => auth::user()->is_admin,
+        ]);
     }
 
     /**

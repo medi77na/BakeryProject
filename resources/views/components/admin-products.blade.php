@@ -64,10 +64,13 @@
                 @method('PATCH')
                 @php
                     $background = $product->published ? 'bg-[#e21c47]' : 'bg-green-700';
-                    $hover_background = $product->published ? 'bg-[#e21c4780]' : 'bg-green-800';
+                    $hoverBackground = $product->published ? 'hover:bg-[#c91a40]' : 'hover:bg-green-800'; // Hover rojo más oscuro
+                    $focusRing = 'focus:ring-4 focus:outline-none focus:ring-green-300';
+                    $darkMode = 'dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800';
                 @endphp
+
                 <button
-                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white {{ $background }} rounded-lg hover:{{ $hover_background }} focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                    class="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white {{ $background }} rounded-lg {{ $hoverBackground }} {{ $focusRing }} {{ $darkMode }}"
                     type="submit">
                     {{ $product->published ? 'Ocultar' : 'Publicar' }}
                 </button>
