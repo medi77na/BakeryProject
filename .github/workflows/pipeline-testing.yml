@@ -11,6 +11,17 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: secret
+          MYSQL_DATABASE: testing_database
+          MYSQL_USER: root
+          MYSQL_PASSWORD: secret
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       # 1. Configurar el repositorio
@@ -32,7 +43,14 @@ jobs:
 
       # 4. Crear archivo .env para pruebas
       - name: Create .env.testing file
-        run: cp .env.example .env.testing
+        run: |
+          cp .env.example .env.testing
+          sed -i "s|DB_CONNECTION=mysql|DB_CONNECTION=mysql|g" .env.testing
+          sed -i "s|DB_HOST=127.0.0.1|DB_HOST=127.0.0.1|g" .env.testing
+          sed -i "s|DB_PORT=3306|DB_PORT=3306|g" .env.testing
+          sed -i "s|DB_DATABASE=laravel|DB_DATABASE=testing_database|g" .env.testing
+          sed -i "s|DB_USERNAME=root|DB_USERNAME=root|g" .env.testing
+          sed -i "s|DB_PASSWORD=|DB_PASSWORD=secret|g" .env.testing
 
       # 5. Generar clave de la aplicación
       - name: Generate application key
