@@ -35,8 +35,8 @@ jobs:
         run: php artisan key:generate
 
       - name: Run migrations
-        run: php artisan test --env=production
-        
+        run: php artisan migrate --env=testing
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
