@@ -80,40 +80,20 @@ jobs:
       - name: Build assets with Vite
         run: npm run build
 
-      - name: Create .env file on server
-        run: |
-          ssh -p 65002 u976542190@88.223.85.92 'cp /home/u976542190/domains/pets.jcomtec.com/.env.example /home/u976542190/domains/pets.jcomtec.com/.env'
+      # 4. Configurar las variables de entorno
+      - name: Set environment variables
+        run: cp .env.example .env
 
-      - name: Update .env file on server
+      # Usa variables de entorno seguras de GitHub Secrets para la conexión a la base de datos
+      - name: Update environment file
         run: |
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^APP_NAME=.*|APP_NAME=${{ secrets.APP_NAME }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^APP_ENV=.*|APP_ENV=${{ secrets.APP_ENV }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^APP_DEBUG=.*|APP_ENV=${{ secrets.APP_DEBUG }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^APP_URL=.*|APP_URL=${{ secrets.APP_URL }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^DB_CONNECTION=.*|DB_CONNECTION=${{ secrets.DB_CONNECTION }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^# DB_HOST=.*|DB_HOST=${{ secrets.DB_HOST }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^# DB_PORT=.*|DB_PORT=${{ secrets.DB_PORT }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^# DB_DATABASE=.*|DB_DATABASE=${{ secrets.DB_DATABASE }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^# DB_USERNAME=.*|DB_USERNAME=${{ secrets.DB_USERNAME }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
-          ssh -p 65002 u976542190@88.223.85.92 'sed -i "s|^# DB_PASSWORD=.*|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|" /home/u976542190/domains/pets.jcomtec.com/.env'
+          sed -i "s|DB_CONNECTION=mysql|DB_CONNECTION=${{ secrets.DB_CONNECTION }}|g" .env
+          sed -i "s|DB_HOST=127.0.0.1|DB_HOST=${{ secrets.DB_HOST }}|g" .env
+          sed -i "s|DB_PORT=3306|DB_PORT=${{ secrets.DB_PORT }}|g" .env
+          sed -i "s|DB_DATABASE=laravel|DB_DATABASE=${{ secrets.DB_DATABASE }}|g" .env
+          sed -i "s|DB_USERNAME=root|DB_USERNAME=${{ secrets.DB_USERNAME }}|g" .env
+          sed -i "s|DB_PASSWORD=|DB_PASSWORD=${{ secrets.DB_PASSWORD }}|g" .env
 
-      - name: Deploy to Hostinger server
-        run: |
-          rsync -avz -e "ssh -p 65002" --exclude='.git' --exclude='node_modules' --exclude='.env' ./ u976542190@88.223.85.92:/home/u976542190/domains/pets.jcomtec.com
-          ssh -p 65002 u976542190@88.223.85.92 'cd /home/u976542190/domains/pets.jcomtec.com && composer2 install --no-dev && php artisan migrate --force && php artisan key:generate'
-
-      - name: Check and Copy to public_html
-        run: |
-          ssh -p 65002 u976542190@88.223.85.92 << 'EOF'
-            # Ruta base del proyecto
-            PROJECT_PATH="/home/u976542190/domains/pets.jcomtec.com"
-
-            # Verificar si la carpeta public_html existe
-            if [ -d "$PROJECT_PATH/public_html" ]; then
-              echo "La carpeta public_html existe. Copiando archivos..."
-              # Copiar el contenido de la carpeta public a public_html
-              rsync -av "$PROJECT_PATH/public/" "$PROJECT_PATH/public_html/"
-            else
-              echo "La carpeta public_html no existe. No se copiarán los archivos."
-            fi
-          EOF
+      # 5. Probar la conexión a la base de datos
+      - name: Validate database connection
+        run: php artisan migrate:status
