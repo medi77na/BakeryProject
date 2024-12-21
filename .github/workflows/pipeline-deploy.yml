@@ -55,12 +55,6 @@ jobs:
           php artisan route:cache
           php artisan view:cache
 
-      # 8. Configurar permisos (opcional, dependiendo del servidor)
-      - name: Set file permissions
-        run: |
-          chmod -R 775 storage bootstrap/cache
-          chown -R www-data:www-data .
-
-      # 9. Despliegue completado
+      # 8. Despliegue completado
       - name: Notify deployment completion
         run: echo "Deployment to production completed successfully!"
