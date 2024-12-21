@@ -1,0 +1,61 @@
+name: "Testing App"
+
+on:
+  push:
+    branches:
+      - release
+  pull_request:
+    branches:
+      - release
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Configurar el repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configurar PHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, pdo, bcmath
+          ini-values: post_max_size=256M, upload_max_filesize=256M
+          coverage: none
+
+      # 3. Instalar dependencias de Composer
+      - name: Install Composer dependencies
+        run: composer install --no-progress --no-suggest --prefer-dist --optimize-autoloader
+
+      # 4. Crear archivo .env para pruebas
+      - name: Create .env.testing file
+        run: cp .env.example .env.testing
+
+      # 5. Generar clave de la aplicación
+      - name: Generate application key
+        run: php artisan key:generate --env=testing
+
+      # 6. Configurar Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      # 7. Instalar dependencias de Node.js
+      - name: Install Node.js dependencies
+        run: npm install
+
+      # 8. Compilar activos con Vite
+      - name: Build assets with Vite
+        run: npm run build
+
+      # 9. Ejecutar migraciones para el entorno de pruebas
+      - name: Run migrations for testing
+        run: php artisan migrate --env=testing
+
+      # 10. Ejecutar pruebas
+      - name: Run tests
+        run: php artisan test --env=testing
